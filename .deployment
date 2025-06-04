@@ -1,0 +1,3 @@
+[config]
+# Use default Azure deployment for Node.js apps
+# command = deploy.cmd

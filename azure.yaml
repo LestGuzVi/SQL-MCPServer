@@ -1,0 +1,8 @@
+name: remote-mcp-webapp-node
+metadata:
+  template: remote-mcp-webapp-node@0.0.1-beta
+services:
+  web:
+    project: .
+    language: js
+    host: appservice

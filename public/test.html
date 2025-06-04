@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Weather Server - Test Interface</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background-color: #f9fafb;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #374151;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #374151;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            border-left: 4px solid #2563eb;
+            white-space: pre-wrap;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        .error {
+            border-left-color: #ef4444;
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+        .success {
+            border-left-color: #10b981;
+            background-color: #f0fdf4;
+            color: #065f46;
+        }
+        .json-input {
+            height: 120px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌤️ MCP Weather Server Test Interface</h1>
+        <p class="subtitle">Test the Model Context Protocol (MCP) server with weather tools</p>
+
+        <div class="section">
+            <h3>🔧 Server Status</h3>
+            <button onclick="checkHealth()">Check Health</button>
+            <button onclick="getCapabilities()">Get Capabilities</button>
+            <button onclick="listTools()">List Tools</button>
+            <div id="statusResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🚨 Weather Alerts</h3>
+            <div class="form-group">
+                <label for="stateSelect">Select State:</label>
+                <select id="stateSelect">
+                    <option value="CA">California (CA)</option>
+                    <option value="NY">New York (NY)</option>
+                    <option value="TX">Texas (TX)</option>
+                    <option value="FL">Florida (FL)</option>
+                    <option value="WA">Washington (WA)</option>
+                    <option value="IL">Illinois (IL)</option>
+                    <option value="PA">Pennsylvania (PA)</option>
+                    <option value="OH">Ohio (OH)</option>
+                    <option value="GA">Georgia (GA)</option>
+                    <option value="NC">North Carolina (NC)</option>
+                </select>
+            </div>
+            <button onclick="getAlerts()">Get Weather Alerts</button>
+            <div id="alertsResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🌡️ Weather Forecast</h3>
+            <div class="form-group">
+                <label for="latitude">Latitude:</label>
+                <input type="number" id="latitude" value="37.7749" step="any" placeholder="e.g., 37.7749">
+            </div>
+            <div class="form-group">
+                <label for="longitude">Longitude:</label>
+                <input type="number" id="longitude" value="-122.4194" step="any" placeholder="e.g., -122.4194">
+            </div>
+            <button onclick="getForecast()">Get Weather Forecast</button>
+            <div id="forecastResponse" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="section">
+            <h3>🔍 Custom MCP Request</h3>
+            <div class="form-group">
+                <label for="customRequest">JSON-RPC Request:</label>
+                <textarea id="customRequest" class="json-input" placeholder='{"jsonrpc": "2.0", "method": "tools/list", "id": 1}'></textarea>
+            </div>
+            <button onclick="sendCustomRequest()">Send Request</button>
+            <div id="customResponse" class="response" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        async function makeRequest(url, data) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (error) {
+                throw new Error(`Network error: ${error.message}`);
+            }
+        }
+
+        async function makeGetRequest(url) {
+            try {
+                const response = await fetch(url);
+                return await response.json();
+            } catch (error) {
+                throw new Error(`Network error: ${error.message}`);
+            }
+        }
+
+        function showResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `response ${isError ? 'error' : 'success'}`;
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        async function checkHealth() {
+            try {
+                const data = await makeGetRequest('/health');
+                showResponse('statusResponse', data);
+            } catch (error) {
+                showResponse('statusResponse', error.message, true);
+            }
+        }
+
+        async function getCapabilities() {
+            try {
+                const data = await makeGetRequest('/mcp/capabilities');
+                showResponse('statusResponse', data);
+            } catch (error) {
+                showResponse('statusResponse', error.message, true);
+            }
+        }
+
+        async function listTools() {
+            try {
+                const request = {
+                    jsonrpc: "2.0",
+                    method: "tools/list",
+                    id: 1
+                };
+                const data = await makeRequest('/mcp/stream', request);
+                showResponse('statusResponse', data);
+            } catch (error) {
+                showResponse('statusResponse', error.message, true);
+            }
+        }
+
+        async function getAlerts() {
+            try {
+                const state = document.getElementById('stateSelect').value;
+                const request = {
+                    jsonrpc: "2.0",
+                    method: "tools/call",
+                    params: {
+                        name: "get_alerts",
+                        arguments: { state: state }
+                    },
+                    id: 2
+                };
+                const data = await makeRequest('/mcp/stream', request);
+                showResponse('alertsResponse', data);
+            } catch (error) {
+                showResponse('alertsResponse', error.message, true);
+            }
+        }
+
+        async function getForecast() {
+            try {
+                const latitude = parseFloat(document.getElementById('latitude').value);
+                const longitude = parseFloat(document.getElementById('longitude').value);
+                
+                if (isNaN(latitude) || isNaN(longitude)) {
+                    throw new Error('Please enter valid latitude and longitude values');
+                }
+                
+                const request = {
+                    jsonrpc: "2.0",
+                    method: "tools/call",
+                    params: {
+                        name: "get_forecast",
+                        arguments: { latitude: latitude, longitude: longitude }
+                    },
+                    id: 3
+                };
+                const data = await makeRequest('/mcp/stream', request);
+                showResponse('forecastResponse', data);
+            } catch (error) {
+                showResponse('forecastResponse', error.message, true);
+            }
+        }
+
+        async function sendCustomRequest() {
+            try {
+                const requestText = document.getElementById('customRequest').value;
+                if (!requestText.trim()) {
+                    throw new Error('Please enter a JSON-RPC request');
+                }
+                
+                const request = JSON.parse(requestText);
+                const data = await makeRequest('/mcp/stream', request);
+                showResponse('customResponse', data);
+            } catch (error) {
+                showResponse('customResponse', error.message, true);
+            }
+        }
+
+        // Load initial status on page load
+        window.onload = function() {
+            checkHealth();
+        };
+    </script>
+</body>
+</html>
