@@ -160,44 +160,6 @@ curl -X POST "http://localhost:8000/mcp" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc": "2.0", "method": "tools/call", "params": {"name": "get_forecast", "arguments": {"latitude": 37.7749, "longitude": -122.4194}}, "id": 2}'
 ```
-{
-  "jsonrpc": "2.0",
-  "method": "tools/list",
-  "params": {},
-  "id": 2
-}
-```
-
-#### Call Weather Alert Tool
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "tools/call",
-  "params": {
-    "name": "get_alerts",
-    "arguments": {
-      "state": "CA"
-    }
-  },
-  "id": 3
-}
-```
-
-#### Call Weather Forecast Tool
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "tools/call",
-  "params": {
-    "name": "get_forecast",
-    "arguments": {
-      "latitude": 37.7749,
-      "longitude": -122.4194
-    }
-  },
-  "id": 4
-}
-```
 
 ## 🌦️ Data Source
 
@@ -238,14 +200,10 @@ This is a sample project demonstrating MCP server implementation with Azure depl
 - Improve the Azure deployment template
 - Submit issues and suggestions
 
-## 📄 License
-
-MIT License - see the project for details.
-
 ---
 
 **Ready to deploy?** Run `azd up` and have your MCP weather server live on Azure in minutes! 🚀
 
-## 📝 License
+## � License
 
 MIT License - feel free to use this project for your own applications.
