@@ -1,5 +1,5 @@
 {
-  "name": "remote-mcp-webapp-node",
+  "name": "gmg-sql-mcp-webapp-node",
   "version": "1.0.0",
   "main": "server.js",
   "description": "A Model Context Protocol (MCP) server built with Express.js that provides weather information using the National Weather Service API",
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "mcp",
-    "model-context-protocol", 
+    "model-context-protocol",
     "weather",
     "api",
     "express",
@@ -30,6 +30,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
+    "mssql": "^11.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

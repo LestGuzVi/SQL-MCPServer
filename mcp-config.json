@@ -8,13 +8,13 @@
       "name": "Weather MCP Server (Local - Node.js)",
       "description": "MCP Server with weather forecast and alerts tools running locally on Node.js"
     },
-    "weather-mcp-server-azure": {
+    "gmg-mcp-server-azure": {
       "transport": {
         "type": "http",
-        "url": "https://<APP-SERVICE-NAME>.azurewebsites.net/mcp/stream"
+        "url": "https://app-web-i2jzrp4f3ako2.azurewebsites.net/mcp/stream"
       },
-      "name": "Weather MCP Server (Azure - Node.js)",
-      "description": "MCP Server with weather forecast and alerts tools hosted on Azure with Node.js"
+      "name": "GMG MCP Server (Azure - Node.js)",
+      "description": "MCP Server with DB info tools hosted on Azure with Node.js"
     }
   }
 }
