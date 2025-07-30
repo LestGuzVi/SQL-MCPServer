@@ -4,7 +4,8 @@
   "main": "server.js",
   "description": "A Model Context Protocol (MCP) server built with Express.js that provides weather information using the National Weather Service API",
   "scripts": {
-    "start": "node server.js",
+    "start2": "node server.js",
+    "start": "node indexmcp.js",
     "dev": "nodemon server.js",
     "test": "node test-client.js",
     "test:azure": "node test-client.js --url=https://<APP-SERVICE-NAME>.azurewebsites.net",
@@ -25,6 +26,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
     "axios": "^1.9.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -34,6 +36,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "nodemon": "^3.1.10"
   }
 }
