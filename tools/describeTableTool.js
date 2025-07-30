@@ -1,4 +1,5 @@
 //const sql = require("mssql");
+//TODO: Asegurar seguridad contra SQL Injection
 const { ensureConnection, sql } = require("../utils/sqlConnection.js");
 
 module.exports = {

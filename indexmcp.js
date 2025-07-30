@@ -11,25 +11,8 @@
  * - Herramienta para crear nuevas notas.
  * - Prompt para resumir todas las notas.
  * - Manejo de sesiones MCP vía HTTP (POST, GET, DELETE).
- * 
- * Ideal para aprender cómo funciona MCP y cómo integrar recursos, herramientas y prompts.
+
  */
-
-// import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-// import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-// import {
-//   CallToolRequestSchema,
-//   ListResourcesRequestSchema,
-//   ListToolsRequestSchema,
-//   ReadResourceRequestSchema,
-//   ListPromptsRequestSchema,
-//   GetPromptRequestSchema,
-//   isInitializeRequest,
-// } from "@modelcontextprotocol/sdk/types.js";
-
-// import { randomUUID } from "node:crypto";
-// import express, { Request, Response } from "express";
-
 
 const { Server } = require("@modelcontextprotocol/sdk/server/index.js");
 const { StreamableHTTPServerTransport } = require("@modelcontextprotocol/sdk/server/streamableHttp.js");

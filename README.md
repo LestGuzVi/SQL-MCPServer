@@ -1,111 +1,118 @@
-# Node.js MCP Weather Server with Azure Deployment
 
-A Model Context Protocol (MCP) server built with Express.js and Node.js that provides weather information using the National Weather Service API. Ready for deployment to Azure App Service with Azure Developer CLI (azd).
+# Node.js MCP SQL Server (y Weather Server derivado de esta plantilla: [remote-mcp-webapp-node](https://github.com/Azure-Samples/remote-mcp-webapp-node) )
 
-## 🌟 Features
+Servidor MCP (Model Context Protocol) construido con Express.js y Node.js, que implementa el protocolo MCP usando JSON-RPC 2.0 y modificado para proveer herramientas de SQL Server y herramientas meteorológicas basadas en la National Weather Service API. Listo para despliegue en Azure App Service.
 
-- **Express.js Framework**: Fast, unopinionated web framework for Node.js
-- **MCP Protocol Compliance**: Full support for JSON-RPC 2.0 MCP protocol
-- **HTTP Transport**: HTTP-based communication for web connectivity
-- **Weather Tools**:
-  - `get_alerts`: Get weather alerts for any US state
-  - `get_forecast`: Get detailed weather forecast for any location
-- **Azure Ready**: Pre-configured for Azure App Service deployment
-- **Web Test Interface**: Built-in HTML interface for testing
-- **National Weather Service API**: Real-time weather data from official US government source
 
-## 💻 Local Development
 
-### Prerequisites
-- **Node.js 22+** (or Node.js 18+)
-- **npm** (Node Package Manager)
+## 🚀 Características
 
-### Setup & Run
+- **Express.js**: Framework rápido y flexible para Node.js.
+- **Cumplimiento MCP**: Implementación completa del protocolo MCP vía JSON-RPC 2.0.
+- **Herramientas meteorológicas**:
+  - `get_alerts`: Alertas meteorológicas por estado de EE.UU.
+  - `get_forecast`: Pronóstico detallado para cualquier ubicación.
+- **Herramientas SQL Server**:
+  - `describeTableTool`: Describe la estructura de una tabla SQL Server.
+  - `listRelationshipsTool`: Lista las relaciones (foreign keys) entre tablas.
+  - `ListTableTool`: Lista todas las tablas disponibles en la base de datos.
+  - `readDataTool`: Ejecuta consultas SELECT seguras sobre tablas SQL Server.
+- **Interfaz de prueba web**: `/test` para verificación manual.
+- **Conectividad HTTP**: Compatible con MCP Inspector y Copilot Agent Mode.
+- **Despliegue Azure**: Listo para Azure App Service y Azure Developer CLI.
+- **Datos oficiales**: Utiliza la National Weather Service API (sin necesidad de API key).
 
-1. **Clone and install dependencies**:
-   ```bash
-   git clone <your-repo-url>
-   cd remote-mcp-webapp-node
-   npm install
-   ```
 
-2. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
+## �️ Desarrollo local
 
-3. **Access the server**:
-   - Server: http://localhost:8000
-   - Health Check: http://localhost:8000/health
-   - Test Interface: http://localhost:8000/test
+### Requisitos
+- Node.js 18+ (recomendado 22+)
+- npm
 
-## 🔌 Connect to the Local MCP Server
-
-### Using VS Code - Copilot Agent Mode
-
-1. **Add MCP Server** from command palette and add the URL to your running server's HTTP endpoint:
-   ```
-   http://localhost:8000
-   ```
-2. **List MCP Servers** from command palette and start the server
-3. In Copilot chat agent mode, enter a prompt to trigger the tool:
-   ```
-   What's the weather forecast for San Francisco?
-   ```
-4. When prompted to run the tool, consent by clicking **Continue**
-
-### Using MCP Inspector
-
-1. In a **new terminal window**, install and run MCP Inspector:
-   ```bash
-   npx @modelcontextprotocol/inspector
-   ```
-2. CTRL+click the URL displayed by the app (e.g. http://localhost:5173/#resources)
-3. Set the transport type to `HTTP`
-4. Set the URL to your running server's HTTP endpoint and **Connect**:
-   ```
-   http://localhost:8000
-   ```
-5. **List Tools**, click on a tool, and **Run Tool**
-
-## 🚀 Quick Deploy to Azure
-
-### Prerequisites
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd)
-- Active Azure subscription
-
-### Deploy in 3 Commands
+### Instalación y ejecución
 
 ```bash
-# 1. Login to Azure
+git clone <your-repo-url>
+cd remote-mcp-webapp-node
+npm install
+npm run dev
+```
+
+Acceso:
+- Servidor: http://localhost:8000/mcp
+- Health: http://localhost:8000/health
+- Test: http://localhost:8000/test
+
+
+## 🔌 Conexión MCP
+
+### VS Code Copilot Agent Mode
+- Agrega el endpoint MCP: `http://localhost:8000`
+- Usa prompts para activar herramientas MCP.
+
+### MCP Inspector
+- Instala y ejecuta: `npx @modelcontextprotocol/inspector`
+- Conecta vía HTTP al endpoint local.
+
+
+## 🚀 Despliegue rápido en Azure
+
+### Requisitos
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Azure Developer CLI (azd)](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd)
+- Suscripción activa de Azure
+
+### Despliegue en 3 comandos
+
+```bash
+# 1. Login a Azure
 azd auth login
 
-# 2. Initialize the project
+# 2. Inicializa el proyecto
 azd init
 
-# 3. Deploy to Azure
+# 3. Despliega en Azure
 azd up
 ```
 
-After deployment, your MCP server will be available at:
-- **Health Check**: `https://<your-app>.azurewebsites.net/health`
+Después del despliegue, tu servidor MCP estará disponible en:
+- **Health**: `https://<your-app>.azurewebsites.net/health`
 - **MCP Capabilities**: `https://<your-app>.azurewebsites.net/mcp/capabilities`
-- **Test Interface**: `https://<your-app>.azurewebsites.net/test`
+- **MCP Server**: `https://<your-app>.azurewebsites.net/mcp`
+- **Test**: `https://<your-app>.azurewebsites.net/test`
 
-## 🔌 Connect to the Remote MCP Server
 
-Follow the same guidance as above, but use your App Service URL instead.
+## 🔌 Conexión remota MCP
 
-## 🧪 Testing
+Sigue la misma guía anterior, pero usa la URL de tu App Service.
 
-Visit `/test` endpoint for an interactive testing interface.
 
-## 🌦️ Data Source
+## 🧪 Pruebas
 
-This server uses the **National Weather Service (NWS) API**:
-- Real-time weather alerts and warnings
-- Detailed weather forecasts
-- Official US government weather data  
-- No API key required
-- High reliability and accuracy
+- Cliente de pruebas: `test-client.js`
+- Interfaz web: `/test`
+- Todos los métodos MCP retornan respuestas JSON-RPC 2.0 válidas.
+
+
+## 🌦️ Fuente de datos
+
+Este servidor utiliza la **National Weather Service API**:
+- Datos oficiales y en tiempo real
+- Sin necesidad de API key
+- Alta confiabilidad y precisión
+
+**Azure SQL Server**
+- Configurar .env con las credenciales de SQL
+
+## 📝 Notas de arquitectura
+
+- `indexmcp.js`: App principal y lógica MCP.
+- Herramientas meteorológicas y SQL Server: Funciones async en `tools/`.
+- Rutas y utilidades organizadas por funcionalidad.
+- Conexión SQL Server gestionada en `utils/sqlConnection.js`.
+
+## 📄 Recursos útiles
+
+- [Documentación MCP](https://modelcontextprotocol.io/llms-full.txt)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd)
