@@ -1,8 +1,17 @@
+/**
+ * ListTables Tool
+ * 
+ * Descripción: Devuelve la lista completa de tablas disponibles en la base de datos SQL Server conectada. 
+ * Uso: Utiliza esta herramienta siempre que necesites conocer el esquema actual o validar la existencia de una tabla antes de realizar consultas.
+ * Parámetros: Ninguno.
+ * Respuesta: Un array de nombres de tablas (strings).
+ * Ejemplo de uso: Para explorar el esquema antes de construir una consulta SQL dinámica.
+ */
 const { ensureConnection, sql } = require("../utils/sqlConnection.js");
 
 module.exports = {
   name: "list_tables",
-  description: "List all tables in the database",
+  description: "Devuelve la lista completa de tablas disponibles en la base de datos SQL Server conectada. Utiliza esta herramienta siempre que necesites conocer el esquema actual o validar la existencia de una tabla antes de realizar consultas. No requiere parámetros. Responde con un array de nombres de tablas (strings). Ejemplo de uso: Para explorar el esquema antes de construir una consulta SQL dinámica.",
   inputSchema: {
     type: "object",
     properties: {},

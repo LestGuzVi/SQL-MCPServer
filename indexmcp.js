@@ -47,11 +47,14 @@ const notes  = {
 
 // Importa herramientas externas
 const describeTableTool = require("./tools/describeTableTool.js");
-const getAlertsTool = require("./tools/getAlerts.js");
-const getForecastTool = require("./tools/getForecast.js");
+// const getAlertsTool = require("./tools/getAlerts.js");
+// const getForecastTool = require("./tools/getForecast.js");
 const listRelationshipsTool = require("./tools/listRelationshipsTool.js");
 const listTableTool = require("./tools/ListTableTool.js");
 const readDataTool = require("./tools/readDataTool.js");
+const getCatalogSamplesTool = require("./tools/getCatalogSamples.js");
+const getExampleQueriesTool = require("./tools/getExampleQueries.js");
+const getSynonymsTool = require("./tools/getSynonymsTool.js");
 
 // 🚀 Inicializa la app Express
 const app = express();
@@ -121,39 +124,40 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
-      {
-        name: "create_note",
-        description: "Create a new note",
-        inputSchema: {
-          type: "object",
-          properties: {
-            title: {
-              type: "string",
-              description: "Title of the note",
-            },
-            content: {
-              type: "string",
-              description: "Text content of the note",
-            },
-          },
-          required: ["title", "content"],
-        },
-      },
+      // {
+      //   name: "create_note",
+      //   description: "Create a new note",
+      //   inputSchema: {
+      //     type: "object",
+      //     properties: {
+      //       title: {
+      //         type: "string",
+      //         description: "Title of the note",
+      //       },
+      //       content: {
+      //         type: "string",
+      //         description: "Text content of the note",
+      //       },
+      //     },
+      //     required: ["title", "content"],
+      //   },
+      // },
       // Herramientas externas
+
+      // {
+      //   name: getAlertsTool.name,
+      //   description: getAlertsTool.description,
+      //   inputSchema: getAlertsTool.inputSchema,
+      // },
+      {
+        name: getSynonymsTool.name,
+        description: getSynonymsTool.description,
+        inputSchema: getSynonymsTool.inputSchema,
+      },
       {
         name: describeTableTool.name,
         description: describeTableTool.description,
         inputSchema: describeTableTool.inputSchema,
-      },
-      {
-        name: getAlertsTool.name,
-        description: getAlertsTool.description,
-        inputSchema: getAlertsTool.inputSchema,
-      },
-      {
-        name: getForecastTool.name,
-        description: getForecastTool.description,
-        inputSchema: getForecastTool.inputSchema,
       },
       {
         name: listRelationshipsTool.name,
@@ -169,6 +173,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: readDataTool.name,
         description: readDataTool.description,
         inputSchema: readDataTool.inputSchema,
+      },
+      {
+        name: getCatalogSamplesTool.name,
+        description: getCatalogSamplesTool.description,
+        inputSchema: getCatalogSamplesTool.inputSchema,
+      },
+      {
+        name: getExampleQueriesTool.name,
+        description: getExampleQueriesTool.description,
+        inputSchema: getExampleQueriesTool.inputSchema,
       },
     ],
   };
@@ -199,19 +213,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
 
+
   // Herramientas externas
   if (toolName === describeTableTool.name) {
     const result = await describeTableTool.run(args);
     return { content: [{ type: "text", text: result }] };
   }
-  if (toolName === getAlertsTool.name) {
-    const result = await getAlertsTool.handler(args);
-    return { content: [{ type: "text", text: result }] };
-  }
-  if (toolName === getForecastTool.name) {
-    const result = await getForecastTool.handler(args);
-    return { content: [{ type: "text", text: result }] };
-  }
+  // if (toolName === getAlertsTool.name) {
+  //   const result = await getAlertsTool.handler(args);
+  //   return { content: [{ type: "text", text: result }] };
+  // }
+  // if (toolName === getForecastTool.name) {
+  //   const result = await getForecastTool.handler(args);
+  //   return { content: [{ type: "text", text: result }] };
+  // }
   if (toolName === listRelationshipsTool.name) {
     const result = await listRelationshipsTool.run(args);
     return { content: [{ type: "text", text: result }] };
@@ -223,6 +238,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (toolName === readDataTool.name) {
     const result = await readDataTool.run(args);
     return { content: [{ type: "text", text: result }] };
+  }
+  if (toolName === getSynonymsTool.name) {
+    const result = await getSynonymsTool.run(args);
+    return { content: [{ type: "text", text: result }] };
+  }
+  if (toolName === getCatalogSamplesTool.name) {
+    const result = await getCatalogSamplesTool.handler(args);
+    return { content: [{ type: "text", text: JSON.stringify(result) }] };
+  }
+  if (toolName === getExampleQueriesTool.name) {
+    const result = await getExampleQueriesTool.handler(args);
+    return { content: [{ type: "text", text: JSON.stringify(result) }] };
   }
 
   throw new Error("Unknown tool");

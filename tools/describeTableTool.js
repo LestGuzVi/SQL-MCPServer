@@ -1,10 +1,20 @@
+/**
+ * DescribeTable Tool
+ * 
+ * Descripción: Devuelve la estructura de una tabla específica, incluyendo el nombre y tipo de cada columna.
+ * Uso: Utiliza esta herramienta para obtener detalles de las columnas de una tabla antes de construir una consulta SQL.
+ * Parámetros:
+ *   - table (string): Nombre de la tabla a describir.
+ * Respuesta: Un array de objetos, cada uno con el nombre y tipo de columna.
+ * Ejemplo de uso: Para saber qué columnas puedes seleccionar o filtrar en una consulta.
+ */
 //const sql = require("mssql");
 //TODO: Asegurar seguridad contra SQL Injection
 const { ensureConnection, sql } = require("../utils/sqlConnection.js");
 
 module.exports = {
   name: "describe_table",
-  description: "Describes the columns and keys of a given MSSQL table.",
+  description: "Devuelve la estructura de una tabla específica, incluyendo el nombre y tipo de cada columna. Utiliza esta herramienta para obtener detalles de las columnas de una tabla antes de construir una consulta SQL. Parámetro: table (string), nombre de la tabla a describir. Responde con un array de objetos, cada uno con el nombre y tipo de columna. Ejemplo de uso: Para saber qué columnas puedes seleccionar o filtrar en una consulta.",
   inputSchema: {
     type: "object",
     properties: {

@@ -1,4 +1,21 @@
+/**
+ * ReadData Tool
+ * 
+ * Descripción: Ejecuta una consulta SQL SELECT sobre la base de datos y devuelve los resultados.
+ * Uso: Utiliza esta herramienta únicamente cuando tengas el contexto completo del esquema y la consulta SQL esté validada.
+ * Parámetros:
+ *   - query (string): Consulta SQL SELECT a ejecutar. No se permiten operaciones destructivas (INSERT, UPDATE, DELETE, DROP, etc.).
+ * Respuesta: Un array de objetos, cada uno representando una fila del resultado.
+ * Ejemplo de uso: Para obtener datos específicos según la intención del usuario.
+ */
+
 const { ensureConnection, sql } = require("../utils/sqlConnection.js");
+const { mapTermToTableOrColumn } = require("./synonymMapper.js");
+/**
+ * Utilidad para mapear términos del usuario a tablas/columnas reales usando sinónimos.
+ * Uso sugerido: Antes de armar la consulta SQL, llama a mapTermToTableOrColumn(term) para cada palabra clave.
+ * Ejemplo: mapTermToTableOrColumn('servicio') // => 'servicio' o el nombre real de la tabla
+ */
 
 const DANGEROUS_KEYWORDS = [
   'DELETE', 'DROP', 'UPDATE', 'INSERT', 'ALTER', 'CREATE',
@@ -122,7 +139,7 @@ function formatResultAsString(data) {
 
 module.exports = {
   name: "read_data",
-  description: "Executes a SELECT query on an MSSQL Database table. The query must start with SELECT and cannot contain any destructive SQL operations for security reasons.",
+  description: "Ejecuta una consulta SQL SELECT sobre la base de datos y devuelve los resultados. Utiliza esta herramienta únicamente cuando tengas el contexto completo del esquema y la consulta SQL esté validada. Parámetro: query (string), consulta SQL SELECT a ejecutar. No se permiten operaciones destructivas (INSERT, UPDATE, DELETE, DROP, etc.). Responde con un array de objetos, cada uno representando una fila del resultado. Ejemplo de uso: Para obtener datos específicos según la intención del usuario.",
   inputSchema: {
     type: "object",
     properties: {
@@ -134,6 +151,7 @@ module.exports = {
     required: ["query"],
   },
   async run(params) {
+    // Puedes usar mapTermToTableOrColumn aquí o exponerlo para el agente LLM
     let pool;
     try {
 

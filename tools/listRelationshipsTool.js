@@ -1,8 +1,18 @@
+/**
+ * ListRelationships Tool
+ * 
+ * Descripción: Devuelve todas las relaciones y llaves foráneas entre las tablas de la base de datos.
+ * Uso: Utiliza esta herramienta para identificar cómo se relacionan las tablas y construir JOINs correctos en tus consultas SQL.
+ * Parámetros: Ninguno.
+ * Respuesta: Un array de objetos, cada uno describiendo una relación (tabla origen, columna origen, tabla destino, columna destino).
+ * Ejemplo de uso: Para construir consultas que involucren varias tablas relacionadas.
+ */
 const { ensureConnection, sql } = require("../utils/sqlConnection.js");
 
 module.exports = {
   name: "list_relationships",
   description: "Lists foreign key relationships between tables in the MSSQL database.",
+    description: 'Devuelve todas las relaciones y llaves foráneas entre las tablas de la base de datos. Utiliza esta herramienta para identificar cómo se relacionan las tablas y construir JOINs correctos en tus consultas SQL. No requiere parámetros. Responde con un array de objetos, cada uno describiendo una relación (tabla origen, columna origen, tabla destino, columna destino). Ejemplo de uso: Para construir consultas que involucren varias tablas relacionadas.',
   inputSchema: {
     type: "object",
     properties: {},

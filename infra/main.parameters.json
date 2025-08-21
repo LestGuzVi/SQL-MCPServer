@@ -3,13 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "environmentName": {
-      "value": "${AZURE_ENV_NAME}"
+      "value": "GMG_MCP"
     },
     "location": {
-      "value": "${AZURE_LOCATION}"
+      "value": "eastus"
     },
-    "principalId": {
-      "value": "${AZURE_PRINCIPAL_ID}"
+    "appServicePlanName": {
+      "value": "plan-i2jzrp4f3ako2"
+    },
+    "appServiceName": {
+      "value": "app-web-i2jzrp4f3ako2"
     }
   }
 }
