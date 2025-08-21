@@ -4,7 +4,6 @@
 Servidor MCP (Model Context Protocol) construido con Express.js y Node.js, que implementa el protocolo MCP usando JSON-RPC 2.0 y modificado para proveer herramientas de SQL Server y herramientas meteorológicas basadas en la National Weather Service API. Listo para despliegue en Azure App Service.
 
 
-
 ## 🚀 Características
 
 - **Express.js**: Framework rápido y flexible para Node.js.
@@ -15,15 +14,42 @@ Servidor MCP (Model Context Protocol) construido con Express.js y Node.js, que i
 - **Herramientas SQL Server**:
   - `describeTableTool`: Describe la estructura de una tabla SQL Server.
   - `listRelationshipsTool`: Lista las relaciones (foreign keys) entre tablas.
+  - `getExamplesQueries`: Lista posibles preguntas y descripción.
+  - `getCatalogSamples`: Lista valores importantes de tablas catálogo.
   - `ListTableTool`: Lista todas las tablas disponibles en la base de datos.
   - `readDataTool`: Ejecuta consultas SELECT seguras sobre tablas SQL Server.
+  - `getSynonymsTool`: Expone el diccionario de sinónimos para mapeo semántico de términos ambiguos, variantes y valores de catálogo.
 - **Interfaz de prueba web**: `/test` para verificación manual.
 - **Conectividad HTTP**: Compatible con MCP Inspector y Copilot Agent Mode.
 - **Despliegue Azure**: Listo para Azure App Service y Azure Developer CLI.
 - **Datos oficiales**: Utiliza la National Weather Service API (sin necesidad de API key).
 
 
-## �️ Desarrollo local
+## 🧠 Flujo MCP recomendado para agentes LLM
+
+1. Consulta **list_tables** para saber qué tablas existen en la base de datos.
+2. Usa **describe_table** para ver las columnas de cada tabla relevante antes de construir cualquier consulta.
+3. Consulta **list_relationships** para entender cómo se relacionan las tablas y detectar posibles JOINs.
+4. Si el usuario menciona un término de catálogo, valor ambiguo o tienes dudas sobre el significado de un valor, consulta **getCatalogSamples** para ver los valores posibles y su descripción.
+5. Consulta **getSynonymsTool** para buscar y aclarar términos ambiguos, sinónimos o variantes de palabras clave presentes en la pregunta del usuario.
+6. Si la pregunta es compleja o poco frecuente, consulta **getExampleQueries** para obtener ejemplos y considerar si puedes adaptar alguno a la pregunta actual.
+7. Cuando tengas el contexto completo (tablas, columnas, relaciones, catálogos y sinónimos), genera la consulta SQL y ejecútala con **readDataTool**.
+8. Si en cualquier paso falta información, solicita explícitamente el uso de la tool necesaria antes de continuar.
+
+**Notas:**
+- Antes de usar cualquier columna en una consulta, asegúrate de que existe en la tabla usando describe_table.
+- Prioriza siempre la claridad y la validez de la consulta sobre la rapidez de respuesta.
+- Para términos ambiguos, variantes o valores de catálogo, consulta siempre el diccionario de sinónimos y valida con getCatalogSamples si es necesario.
+
+## 📝 Mejores prácticas para consultas ambiguas y nombres parciales
+
+- Usa búsquedas flexibles en SQL (`LIKE`, `LOWER`) para soportar nombres parciales, mayúsculas/minúsculas y errores menores de tipeo.
+- Si el usuario no proporciona el nombre exacto, busca coincidencias parciales y sugiere opciones si hay ambigüedad.
+- Normaliza el input del usuario antes de armar la consulta (minúsculas, sin tildes, sin caracteres especiales).
+- Amplía el diccionario de sinónimos con alias, variantes y valores frecuentes de catálogo.
+
+
+## 📝 Desarrollo local
 
 ### Requisitos
 - Node.js 18+ (recomendado 22+)
@@ -64,6 +90,7 @@ Acceso:
 
 ### Despliegue en 3 comandos
 
+Con Azure (Generado automatico de los servicios)
 ```bash
 # 1. Login a Azure
 azd auth login
@@ -75,11 +102,24 @@ azd init
 azd up
 ```
 
+### Despliegue a servicio App Service existente
+- Utilice el archivo deploy.ps1 para controlar el despliegue si desea utilizar un servicio App Service exitente. Modifique los valores:
+
+```bash
+$resourceGroup = "<Grupo de recurso>"
+$appServiceName = "<nombre de App Service>"
+```
+
+```bash
+az login --tenant "<Tenant Id>"
+```
+
+
 Después del despliegue, tu servidor MCP estará disponible en:
-- **Health**: `https://<your-app>.azurewebsites.net/health`
-- **MCP Capabilities**: `https://<your-app>.azurewebsites.net/mcp/capabilities`
-- **MCP Server**: `https://<your-app>.azurewebsites.net/mcp`
-- **Test**: `https://<your-app>.azurewebsites.net/test`
+- **Health**: `https://<your-app>/health`
+- **MCP Capabilities**: `https://<your-app>/mcp/capabilities`
+- **MCP Server**: `https://<your-app>/mcp`
+- **Test**: `https://<your-app>/test`
 
 
 ## 🔌 Conexión remota MCP
